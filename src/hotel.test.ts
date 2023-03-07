@@ -13,8 +13,16 @@ describe ('Hotel', () => {
             const controller = new Controller(hotel)
         controller.broadcast(movementInMainCorridor1Event)
         expect(spy).toHaveBeenCalledWith(movementInMainCorridor1Event)
-        //expect(hotel.receiveEvent(movementInMainCorridor1Event)).toHaveBeenCalled()
-   
+    })
+    it.only ('should trigger an event to be caught by Camera Sub Corridor 22', () => {
+        const hotel = new Hotel("SuperHotel")
+        const movementInMainCorridor1Event =
+            new MotionEvent("Sub Corridor 22",new Date())
+        const spy = jest.spyOn(hotel, 'receiveEvent')
+            const controller = new Controller(hotel)
+        controller.broadcast(movementInMainCorridor1Event)
+        controller.displayStatus()
+        expect(spy).toHaveBeenCalledWith(movementInMainCorridor1Event)
     })
 
 })

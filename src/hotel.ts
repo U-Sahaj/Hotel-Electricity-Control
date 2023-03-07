@@ -138,14 +138,18 @@ class Light implements ISubscriber{
                 private _on: boolean) {  
     }
     public log() : void {
-        console.log(`Light ${this._name} : ${this._on ? 'ON' : 'OFF'}`)
+        console.log(`Logger: Light ${this._name} - ${this._on ? 'ON' : 'OFF'}`)
     }
     public notify(anEvent: MotionEvent) : void {
         if (anEvent._location === this._name) {
             this._on = true
+            setTimeout(() => {
+                this._on = false
+            }, 5000);
         }
 console.log(`Light ${this._name} notify: ${anEvent._location} ${this._on}`)
     }
+    
 }
 
 class Camera implements ISubscriber{
@@ -153,7 +157,7 @@ class Camera implements ISubscriber{
                 private _show: boolean) {
     }
     public log() : void {
-        console.log(`Camera ${this._name} : ${this._show ? 'SHOW' : 'HIDE'}`)
+        console.log(`Logger: Camera ${this._name} - ${this._show ? 'SHOW' : 'HIDE'}`)
     }
     public notify(anEvent: MotionEvent) : void {
         if (anEvent._location === this._name) {
@@ -171,43 +175,50 @@ export class Controller {
         const mc1_camera = new Camera("Main Corridor 1",false)
         const mc1_floor = new MainCorridor("Main Corridor 1",mc1_light,mc1_camera)
         
-        // const sc11_light = new Light("Sub Corridor 11",false)
-        // const sc11_camera = new Camera("Sub Corridor 11",false)
-        // const sc11_floor = new SubCorridor("Sub Corridor 11",sc11_light,sc11_camera)
+        const sc11_light = new Light("Sub Corridor 11",false)
+        const sc11_camera = new Camera("Sub Corridor 11",false)
+        const sc11_floor = new SubCorridor("Sub Corridor 11",sc11_light,sc11_camera)
         
-        // const sc12_light = new Light("Sub Corridor 12",false)
-        // const sc12_camera = new Camera("Sub Corridor 12",false)
-        // const sc12_floor = new SubCorridor("Sub Corridor 12",sc12_light,sc12_camera)
+        const sc12_light = new Light("Sub Corridor 12",false)
+        const sc12_camera = new Camera("Sub Corridor 12",false)
+        const sc12_floor = new SubCorridor("Sub Corridor 12",sc12_light,sc12_camera)
         
         const floor1 = new Floor("Floor 1")
         floor1.addMainCorridor(mc1_floor)
-        // floor1.addSubCorridor(sc11_floor)
-        // floor1.addSubCorridor(sc12_floor)
+        floor1.addSubCorridor(sc11_floor)
+        floor1.addSubCorridor(sc12_floor)
 
-        // const mc2_light = new Light("Main Corridor 2",true)
-        // const mc2_camera = new Camera("Main Corridor 2",false)
-        // const mc2_floor = new MainCorridor("Main Corridor 1",mc2_light,mc2_camera)
+        const mc2_light = new Light("Main Corridor 2",true)
+        const mc2_camera = new Camera("Main Corridor 2",false)
+        const mc2_floor = new MainCorridor("Main Corridor 1",mc2_light,mc2_camera)
         
-        // const sc21_light = new Light("Sub Corridor 21",false)
-        // const sc21_camera = new Camera("Sub Corridor 21",false)
-        // const sc21_floor = new SubCorridor("Sub Corridor 21",sc21_light,sc21_camera)
+        const sc21_light = new Light("Sub Corridor 21",false)
+        const sc21_camera = new Camera("Sub Corridor 21",false)
+        const sc21_floor = new SubCorridor("Sub Corridor 21",sc21_light,sc21_camera)
         
-        // const sc22_light = new Light("Sub Corridor 22",false)
-        // const sc22_camera = new Camera("Sub Corridor 22",false)
-        // const sc22_floor = new SubCorridor("Sub Corridor 22",sc22_light,sc22_camera)
+        const sc22_light = new Light("Sub Corridor 22",false)
+        const sc22_camera = new Camera("Sub Corridor 22",false)
+        const sc22_floor = new SubCorridor("Sub Corridor 22",sc22_light,sc22_camera)
 
-        // const floor2 = new Floor("Floor 2")
-        // floor2.addMainCorridor(mc2_floor)
-        // floor2.addSubCorridor(sc21_floor)
-        // floor2.addSubCorridor(sc22_floor)
+        const floor2 = new Floor("Floor 2")
+        floor2.addMainCorridor(mc2_floor)
+        floor2.addSubCorridor(sc21_floor)
+        floor2.addSubCorridor(sc22_floor)
         
         hotel.addFloor(floor1)
-        // hotel.addFloor(floor2)
+        hotel.addFloor(floor2)
 
     }
     public broadcast(anEvent: MotionEvent) : void {
         console.log(`Event: ${anEvent._location} at ${anEvent._time}`)
         this._hotel.receiveEvent(anEvent)
+    }
+    public monitor() : void {
+        setInterval(() => {
+            this._hotel.log()
+        }, 5000)
+    }
+    public displayStatus() : void {
         this._hotel.log()
     }
 }
